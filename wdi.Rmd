@@ -1,0 +1,111 @@
+---
+title: "World Bank indicators"
+output: 
+  flexdashboard::flex_dashboard:  
+    vertical_layout: fill
+    runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(plyr)
+library(wbstats)
+library(WDI)
+library(igraph)
+library(tidyverse)
+library(ggplot2)
+library(leaflet)
+library(dygraphs)
+library(DT)
+library(shiny)
+library(shinydashboard)
+library(shinydashboardPlus)
+library(shinyjs)
+library(shinyjqui)
+library(googleVis)
+library(rworldmap)
+library(rworldxtra)
+library(maptools)
+library(maps)
+library(ggmap)
+library(countrycode)
+library(sp)
+library(maps)
+library(maptools)
+
+```
+Sidebar {.sidebar}
+=====================================
+
+```{r}
+# shiny inputs defined here
+```
+
+Overview{data-icon="fa-globe"}
+=====================================  
+    
+column {data-width=300 }
+-------------------------------------
+    
+### Overview {data-commentary-width=40}
+ The World Bank is a huge source of socio-economic data. Indeed, it lists several indicators on almost every country in the world.  It contains economic, financial, demographic and even doing business data for every country in the world. To facilitate access to this formidable source of data, the World Bank provides a RESTful API. To allow people unfamiliar with APIs and their integration into high-level applications, people of good will have developed packages in various programming languages such as `R`, `Python`, `Ruby` or in software such as `STATA`.  
+
+These packages allow direct access to the data via the API without downloading it manually. 
+
+Among these packages are:
+
+- `wbstats` developed in R
+- `world_bank_data` in python
+- `wbopendata` in STATA
+
+In this application I will focus on the `wbstats` package developed in R by `Jesse Piburn`, a Research Scientist in Geographic Data Sciences at Oak Ridge National Laboratory to import different indicators to analyze world poverty and make comparisons between countries. 
+
+I will talk about the `world_bank_data` package in another post on my website.
+
+The useful packages that I need for this work are:
+
+```r
+library(wbstats)
+library(igraph)
+library(tidyverse)
+library(ggplot2)
+library(leaflet)
+library(dygraphs)
+library(DT)
+library(shiny)
+library()
+
+```   
+
+
+    
+
+row {data-width=600 }
+-------------------------------------
+
+### chart
+```{r}
+ world <- map("world", fill=TRUE, plot=FALSE)
+world_map <- map2SpatialPolygons(world, sub(":.*$", "", world$names))
+world_map <- SpatialPolygonsDataFrame(world_map,
+                                      data.frame(country=names(world_map), 
+                                                 stringsAsFactors=FALSE), 
+                                      FALSE)
+
+cnt <- c("Russia", "Afghanistan", "Albania", "Algeria", "Argentina", "Armenia",
+         "Azerbaijan", "Bangladesh", "Belarus")
+
+target <- subset(world_map, country %in% cnt)
+
+leaflet(target) %>% 
+  addTiles() %>% 
+  addPolygons(weight=1)
+```
+
+### chart
+
+
+
+
+                    
+ 
